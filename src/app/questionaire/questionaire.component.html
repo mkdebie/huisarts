@@ -1,0 +1,278 @@
+<div class="kopdiv"><span class="koptop">Treant Cardiologie SpoedVerwijzing</span></div>
+<div >
+  <h2 class="gecentreerd">Doorloop het hele stroomschema om u een juist verwijsadvies te kunnen geven</h2><p>
+    <h3 class="gecentreerd">Verzend de gegevens voor analyse ter verbetering van het verwijsalgoritme</h3>
+</div>
+<mat-horizontal-stepper linear #stepper>
+  <mat-step [stepControl]="vitalFormGroup">
+      <form [formGroup]="vitalFormGroup">
+      <mat-grid-list cols="12" rowHeight="35px">
+        <ng-template matStepLabel>Patient details and vital signs</ng-template>
+          <mat-grid-tile [colspan]=12 class="kop"><span class="titel">Algemene gegegevens</span></mat-grid-tile>
+          <mat-grid-tile [colspan]=4 [rowspan]=2>
+            <div class="text-inside-grid">
+              <mat-form-field>
+                <input matInput placeholder="Geboortedatum" formControlName="birthCtrl">
+              </mat-form-field>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=4 [rowspan]=2>
+            <div class="text-inside-grid">
+              <mat-form-field>
+                <input matInput placeholder="Huisarts" formControlName="huisartsCtrl">
+              </mat-form-field>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=4 [rowspan]=2>
+            <div class="text-inside-grid">
+              <mat-form-field>
+                <input matInput placeholder="Woonplaats" formControlName="plaatsCtrl">
+              </mat-form-field>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=4 [rowspan]=2>
+            <div class="text-inside-grid">
+              <mat-form-field>
+                <input matInput placeholder="Klacht" formControlName="klachtCtrl">
+              </mat-form-field>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=4 [rowspan]=2>
+              <div class="text-inside-grid">
+                <mat-form-field>
+                  <input matInput placeholder="Cardioloog" formControlName="cardioloogCtrl">
+                </mat-form-field>
+              </div>
+            </mat-grid-tile>
+          <mat-grid-tile [colspan]=12 class="kop">
+            <span class="titel">Vitale parameters</span>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=3 [rowspan]=6>
+            <div class="text-inside-grid">
+              <label id="example-radio-group-label">Systolische RR</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="rrCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let rr of rrs" [value]="rr">
+                  {{rr}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=3 [rowspan]=6>
+            <div class="text-inside-grid">
+                <label id="example-radio-group-label">Temperatuur</label>
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="tempCtrl">
+                  <mat-radio-button class="example-radio-button" *ngFor="let temp of temps" [value]="temp">
+                    {{temp}}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=3 [rowspan]=6>
+            <div class="text-inside-grid">
+              <label id="example-radio-group-label">O2 saturatie</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="oxygenCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let oxy of oxygens" [value]="oxy">
+                  {{oxy}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]=3 [rowspan]=6>
+            <div class="text-inside-grid">
+              <label id="example-radio-group-label">ECG</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="ecgCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ecg of ecgs" [value]="ecg" (click)="goForwardVitals(stepper, ecg)">
+                  {{ecg}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+        </form>
+  </mat-step>
+
+  <mat-step [stepControl]="chestPainFormGroup">
+    <form [formGroup]="chestPainFormGroup">
+      <ng-template matStepLabel>Pijn op de borst</ng-template>
+      <mat-grid-list cols="12" rowHeight="35px">
+      <mat-grid-tile [colspan]=12 class="kop">
+          <div class="titel">Pijn op de Borst Criteria</div>
+      </mat-grid-tile>
+
+      <mat-grid-tile [colspan]=3 [rowspan]=6>
+          <div class="text-inside-grid">
+              <label id="example-radio-group-label">Pijn op de borst (gehad) ?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="pobCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivPob(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]=3 [rowspan]=3>
+          <div *ngIf="!pobgehad" class="text-inside-grid">
+              <label id="example-radio-group-label">Pijn nog aanwezig (ondanks NTG)?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="actiefCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivPobActief(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]=3 [rowspan]=3>
+          <div *ngIf="!pobactief" class="text-inside-grid">
+              <label id="example-radio-group-label">Duur korter dan 6 uur ?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="duurCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivPobDuur(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]=3 [rowspan]=3>
+          <div *ngIf="!pobverdacht" class="text-inside-grid">
+              <label id="example-radio-group-label">Zeer instabiele / verdachte anamnese?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="verdachtCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivPobVerdacht(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
+  </mat-step>
+
+  <mat-step [stepControl]="dyspnoeFormGroup">
+    <form [formGroup]="dyspnoeFormGroup">
+      <ng-template matStepLabel>Dyspnoe</ng-template>
+      <mat-grid-list cols="12" rowHeight="35px">
+        <mat-grid-tile [colspan]=12 class="kop">
+            <div class="titel">Dyspnoe Criteria</div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]=3 [rowspan]=6>
+          <div class="text-inside-grid">
+              <label id="example-radio-group-label">Dyspnoe klachten?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="dyspnoeCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivDyspnoe(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]=3 [rowspan]=6>
+          <div *ngIf = "!dyspnoeaanwezig" class="text-inside-grid">
+              <label id="example-radio-group-label">Astma Cardiale beeld?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="acCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivAstmaCardiale(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]=3 [rowspan]=6>
+          <div *ngIf = "!acaanwezig" class="text-inside-grid">
+              <label id="example-radio-group-label">ECG duidelijke ischemisch?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="ischemEcgCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivEcgIschemisch(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="collapsFormGroup">
+    <form [formGroup]="collapsFormGroup">
+      <ng-template matStepLabel>Collaps</ng-template>
+      <mat-grid-list cols="12" rowHeight="35px">
+        <mat-grid-tile [colspan]=12 class="kop">
+            <div class="titel">Collaps Criteria</div>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]=3 [rowspan]=6>
+          <div class="text-inside-grid">
+              <label id="example-radio-group-label">Is patient gecollabeerd?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="collapsCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivCollaps(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]=3 [rowspan]=6>
+          <div *ngIf="!collapsaanwezig" class="text-inside-grid">
+              <label id="example-radio-group-label">Belangrijk Trauma?</label>
+              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="collapsCtrl">
+                <mat-radio-button class="example-radio-button" *ngFor="let ja of janee" [value]="ja" (click)="showDivTrauma(stepper, ja)">
+                  {{ja}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Resultaat</ng-template>
+    <mat-grid-list cols="12" rowHeight="35px">
+        <mat-grid-tile [colspan]=12 class="kop">
+            <div class="titel">Uw verwijsadvies:</div>
+        </mat-grid-tile>
+    <mat-grid-tile [rowspan]=10 [colspan]=12>
+    <div *ngIf="!formuliercompleet">
+      U heeft nog niet alle gegevens ingevuld, controleer nog eens uw waarden
+    </div>
+    <div *ngIf="!verwijzingflank">
+      <mat-card>
+        <mat-card-header class="gecentreerd cardtitel">
+          <mat-card-title>Verwijsadvies: Radid Cardiac Analysis Unit</mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="padding:10px;">
+          <p>Op basis van deze criteria kan patient op de RCAU beoordeeld worden<br>
+          U kunt hiervoor contact op te nemen met de dienstdoende cardioloog.<br>
+        </p>
+        <p>
+            Locatie <b>Stadskanaal</b>: xxx - xxxx xxxx<br>
+            Locatie <b>Hoogeveen</b>: xxx - xxxx xxxx<br>
+        </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngIf="!verwijzingemmen">
+        <mat-card>
+            <mat-card-header class="gecentreerd cardtitel">
+              <mat-card-title>Verwijsadvies: Interventiecentrum te Emmen</mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="padding:10px;">
+              <p>Op basis van deze criteria dient patient beoordeeld te worden<br>
+              U kunt hiervoor contact op te nemen met de dienstdoende cardioloog.<br>
+            </p>
+            <p>
+                Locatie <b>Emmen</b>: xxx - xxxx xxxx<br>
+            </p>
+            <p>Patient kan niet op een RCAU beoordeeld worden vanweg :</p>
+            <ul>
+                <li *ngFor="let reason of reasons">
+                  {{reason}}
+                </li>
+              </ul>
+            </mat-card-content>
+          </mat-card>
+
+    </div>
+    </mat-grid-tile>
+    </mat-grid-list>
+    <div>
+      <div class="gecentreerd">
+      <button mat-raised-button color="primary">Verzend gegevens</button>&nbsp;
+      <button mat-raised-button color="primary" (click)="resetForm(stepper)">Reset</button>
+    </div>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
